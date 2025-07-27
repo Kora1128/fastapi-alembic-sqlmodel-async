@@ -16,11 +16,15 @@ services:
     env_file: ".env"
     environment:                
       MODE: "testing"      
-    depends_on:
-      - database
+    # Note: For testing with Supabase, ensure test database is configured in .env
+    # For local testing, uncomment the depends_on below and ensure database service is available
+    # depends_on:
+    #   - database
     links:
       - caddy_reverse_proxy:storage.localhost
 
+  # Local PostgreSQL database for testing (optional)
+  # Uncomment this section if you want to test with local database instead of Supabase
   database:
     image: bitnami/postgresql
     restart: always
@@ -57,7 +61,7 @@ services:
       - ./backend/app:/code
       # - "${EB_LOG_BASE_DIR}/php-app:/var/log/celery"
     depends_on:
-      - database
+      # - database  # Uncomment if using local database
       - redis_server
     env_file: .env
   
@@ -74,7 +78,7 @@ services:
       - ./backend/app:/code
       # - "${EB_LOG_BASE_DIR}/php-app:/var/log/celery-beat"
     depends_on:
-      - database
+      # - database  # Uncomment if using local database
       - redis_server
     env_file: .env
 

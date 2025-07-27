@@ -26,26 +26,41 @@ class Settings(BaseSettings):
     DATABASE_HOST: str
     DATABASE_PORT: int
     DATABASE_NAME: str
-    DATABASE_CELERY_NAME: str = "celery_schedule_jobs"
+    DATABASE_CELERY_NAME: str = "postgres"  # Default to postgres for Supabase
     REDIS_HOST: str
     REDIS_PORT: str
     DB_POOL_SIZE: int = 83
     WEB_CONCURRENCY: int = 9
     POOL_SIZE: int = max(DB_POOL_SIZE // WEB_CONCURRENCY, 5)
     ASYNC_DATABASE_URI: PostgresDsn | str = ""
+    
+    # Optional: Support for Supabase direct connection URL
+    SUPABASE_DATABASE_URL: str | None = None
 
     @field_validator("ASYNC_DATABASE_URI", mode="after")
     def assemble_db_connection(cls, v: str | None, info: FieldValidationInfo) -> Any:
         if isinstance(v, str):
             if v == "":
-                return PostgresDsn.build(
-                    scheme="postgresql+asyncpg",
-                    username=info.data["DATABASE_USER"],
-                    password=info.data["DATABASE_PASSWORD"],
-                    host=info.data["DATABASE_HOST"],
-                    port=info.data["DATABASE_PORT"],
-                    path=info.data["DATABASE_NAME"],
-                )
+                # Check if Supabase connection URL is provided
+                supabase_url = info.data.get("SUPABASE_DATABASE_URL")
+                if supabase_url:
+                    # Convert to async connection string
+                    if supabase_url.startswith("postgresql://"):
+                        return supabase_url.replace("postgresql://", "postgresql+asyncpg://")
+                    elif supabase_url.startswith("postgres://"):
+                        return supabase_url.replace("postgres://", "postgresql+asyncpg://")
+                    else:
+                        return f"postgresql+asyncpg://{supabase_url}"
+                else:
+                    # Build from individual components
+                    return PostgresDsn.build(
+                        scheme="postgresql+asyncpg",
+                        username=info.data["DATABASE_USER"],
+                        password=info.data["DATABASE_PASSWORD"],
+                        host=info.data["DATABASE_HOST"],
+                        port=info.data["DATABASE_PORT"],
+                        path=info.data["DATABASE_NAME"],
+                    )
         return v
 
     SYNC_CELERY_DATABASE_URI: PostgresDsn | str = ""
@@ -56,14 +71,26 @@ class Settings(BaseSettings):
     ) -> Any:
         if isinstance(v, str):
             if v == "":
-                return PostgresDsn.build(
-                    scheme="db+postgresql",
-                    username=info.data["DATABASE_USER"],
-                    password=info.data["DATABASE_PASSWORD"],
-                    host=info.data["DATABASE_HOST"],
-                    port=info.data["DATABASE_PORT"],
-                    path=info.data["DATABASE_CELERY_NAME"],
-                )
+                # Check if Supabase connection URL is provided
+                supabase_url = info.data.get("SUPABASE_DATABASE_URL")
+                if supabase_url:
+                    # Convert to sync connection string for Celery
+                    if supabase_url.startswith("postgresql://"):
+                        return supabase_url.replace("postgresql://", "db+postgresql://")
+                    elif supabase_url.startswith("postgres://"):
+                        return supabase_url.replace("postgres://", "db+postgresql://")
+                    else:
+                        return f"db+postgresql://{supabase_url}"
+                else:
+                    # Build from individual components
+                    return PostgresDsn.build(
+                        scheme="db+postgresql",
+                        username=info.data["DATABASE_USER"],
+                        password=info.data["DATABASE_PASSWORD"],
+                        host=info.data["DATABASE_HOST"],
+                        port=info.data["DATABASE_PORT"],
+                        path=info.data["DATABASE_CELERY_NAME"],
+                    )
         return v
 
     SYNC_CELERY_BEAT_DATABASE_URI: PostgresDsn | str = ""
@@ -74,14 +101,26 @@ class Settings(BaseSettings):
     ) -> Any:
         if isinstance(v, str):
             if v == "":
-                return PostgresDsn.build(
-                    scheme="postgresql+psycopg2",
-                    username=info.data["DATABASE_USER"],
-                    password=info.data["DATABASE_PASSWORD"],
-                    host=info.data["DATABASE_HOST"],
-                    port=info.data["DATABASE_PORT"],
-                    path=info.data["DATABASE_CELERY_NAME"],
-                )
+                # Check if Supabase connection URL is provided
+                supabase_url = info.data.get("SUPABASE_DATABASE_URL")
+                if supabase_url:
+                    # Convert to sync connection string for Celery Beat
+                    if supabase_url.startswith("postgresql://"):
+                        return supabase_url.replace("postgresql://", "postgresql+psycopg2://")
+                    elif supabase_url.startswith("postgres://"):
+                        return supabase_url.replace("postgres://", "postgresql+psycopg2://")
+                    else:
+                        return f"postgresql+psycopg2://{supabase_url}"
+                else:
+                    # Build from individual components
+                    return PostgresDsn.build(
+                        scheme="postgresql+psycopg2",
+                        username=info.data["DATABASE_USER"],
+                        password=info.data["DATABASE_PASSWORD"],
+                        host=info.data["DATABASE_HOST"],
+                        port=info.data["DATABASE_PORT"],
+                        path=info.data["DATABASE_CELERY_NAME"],
+                    )
         return v
 
     ASYNC_CELERY_BEAT_DATABASE_URI: PostgresDsn | str = ""
@@ -92,14 +131,26 @@ class Settings(BaseSettings):
     ) -> Any:
         if isinstance(v, str):
             if v == "":
-                return PostgresDsn.build(
-                    scheme="postgresql+asyncpg",
-                    username=info.data["DATABASE_USER"],
-                    password=info.data["DATABASE_PASSWORD"],
-                    host=info.data["DATABASE_HOST"],
-                    port=info.data["DATABASE_PORT"],
-                    path=info.data["DATABASE_CELERY_NAME"],
-                )
+                # Check if Supabase connection URL is provided
+                supabase_url = info.data.get("SUPABASE_DATABASE_URL")
+                if supabase_url:
+                    # Convert to async connection string
+                    if supabase_url.startswith("postgresql://"):
+                        return supabase_url.replace("postgresql://", "postgresql+asyncpg://")
+                    elif supabase_url.startswith("postgres://"):
+                        return supabase_url.replace("postgres://", "postgresql+asyncpg://")
+                    else:
+                        return f"postgresql+asyncpg://{supabase_url}"
+                else:
+                    # Build from individual components
+                    return PostgresDsn.build(
+                        scheme="postgresql+asyncpg",
+                        username=info.data["DATABASE_USER"],
+                        password=info.data["DATABASE_PASSWORD"],
+                        host=info.data["DATABASE_HOST"],
+                        port=info.data["DATABASE_PORT"],
+                        path=info.data["DATABASE_CELERY_NAME"],
+                    )
         return v
 
     FIRST_SUPERUSER_EMAIL: EmailStr

@@ -1,6 +1,10 @@
 # Async configuration for FastAPI and SQLModel
 
-This is a project template which uses [FastAPI](https://fastapi.tiangolo.com/), [Alembic](https://alembic.sqlalchemy.org/en/latest/) and async [SQLModel](https://sqlmodel.tiangolo.com/) as ORM which already is compatible with [Pydantic V2](https://docs.pydantic.dev/2.5/) and [SQLAlchemy V2.0](https://docs.sqlalchemy.org/en/20/). It shows a complete async CRUD template using authentication. Our implementation utilizes the newest version of FastAPI and incorporates typing hints that are fully compatible with **Python >=3.10**. If you're looking to build modern and efficient web applications with Python, this template will provide you with the necessary tools to get started quickly. You can read a short article with the motivations of starting this project in [Our Journey Using Async FastAPI](https://medium.com/allient/our-journey-using-async-fastapi-to-harnessing-the-power-of-modern-web-apis-90301827f14c?source=friends_link&sk=9006b3f2a4137a28a8576a69546c8c18). 
+This is a project template which uses [FastAPI](https://fastapi.tiangolo.com/), [Alembic](https://alembic.sqlalchemy.org/en/latest/) and async [SQLModel](https://sqlmodel.tiangolo.com/) as ORM which already is compatible with [Pydantic V2](https://docs.pydantic.dev/2.5/) and [SQLAlchemy V2.0](https://docs.sqlalchemy.org/en/20/). It shows a complete async CRUD template using authentication. Our implementation utilizes the newest version of FastAPI and incorporates typing hints that are fully compatible with **Python >=3.10**. 
+
+**✨ Now supports Supabase as the database backend!** You can use either a local PostgreSQL database or connect to Supabase for a fully managed database solution.
+
+If you're looking to build modern and efficient web applications with Python, this template will provide you with the necessary tools to get started quickly. You can read a short article with the motivations of starting this project in [Our Journey Using Async FastAPI](https://medium.com/allient/our-journey-using-async-fastapi-to-harnessing-the-power-of-modern-web-apis-90301827f14c?source=friends_link&sk=9006b3f2a4137a28a8576a69546c8c18). 
 
 If you are looking to create new a project from zero, I recommend you to use [create-fastapi-project](https://github.com/allient/create-fastapi-project). 
 
@@ -10,35 +14,39 @@ Do you need assistance, trainning or support for your newxt project using fastap
 
 Developing web applications can be a challenging process, especially when dealing with databases, authentication, asynchronous tasks, and other complex components. Our template is designed to simplify this process and offer you a solid starting point. Some of the highlights of this template include:
 
-- FastAPI Integration: FastAPI is a modern and efficient web framework that allows you to quickly and easily create APIs. This template uses the latest features of FastAPI and offers type hints that are compatible with **Python 3.10** and later versions.
-- Asynchronous Database Management: We use SQLModel, an asynchronous ORM library, to interact with the database efficiently and securely.
-- Asynchronous Tasks with Celery: This template includes examples of how to execute asynchronous and scheduled tasks using Celery, which is ideal for operations that require significant time or resources.
-- Authentication and Authorization: We implement JWT-based authentication and role-based access control to ensure that your APIs are secure and protected.
-- Documentation and Automated Testing: The template is configured to automatically generate interactive documentation for your APIs. It also includes automated tests using pytest to ensure code quality.
-- Development Best Practices: We apply code formatting, type checking, and static analysis tools to ensure that the code is readable, robust, and reliable.
+- **FastAPI Integration**: FastAPI is a modern and efficient web framework that allows you to quickly and easily create APIs. This template uses the latest features of FastAPI and offers type hints that are compatible with **Python 3.10** and later versions.
+- **Flexible Database Options**: Choose between local PostgreSQL or Supabase for your database needs. Supabase provides a managed PostgreSQL database with additional features like real-time subscriptions, authentication, and a built-in dashboard.
+- **Asynchronous Database Management**: We use SQLModel, an asynchronous ORM library, to interact with the database efficiently and securely.
+- **Asynchronous Tasks with Celery**: This template includes examples of how to execute asynchronous and scheduled tasks using Celery, which is ideal for operations that require significant time or resources.
+- **Authentication and Authorization**: We implement JWT-based authentication and role-based access control to ensure that your APIs are secure and protected.
+- **Documentation and Automated Testing**: The template is configured to automatically generate interactive documentation for your APIs. It also includes automated tests using pytest to ensure code quality.
+- **Development Best Practices**: We apply code formatting, type checking, and static analysis tools to ensure that the code is readable, robust, and reliable.
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
-2. [Run the project using Docker containers and forcing build containers](#run-the-project-using-docker-containers-and-forcing-build-containers)
-3. [Run project using Docker containers](#run-project-using-docker-containers)
-4. [Setup database with initial data](#setup-database-with-initial-data)
-5. [ERD Database model](#erd-database-model)
-6. [Containers architecture](#containers-architecture)
-7. [Preview](#preview)
-8. [Static files](#static-files)
-9. [Minio server](#minio-server)
-10. [Celery](#celery)
-11. [Run Alembic migrations (Only if you change the DB model)](#run-alembic-migrations-only-if-you-change-the-db-model)
-12. [Production Deployment](#production-deployment)
-13. [Database unique IDs](#database-unique-ids)
-14. [Code Style](#code-style)
-15. [SonarQube static analysis](#sonarqube-static-analysis)
-16. [Testing](#testing)
-17. [Type checker](#type-checker)
-18. [Basic chatbot example with Langchain and OpenAI](#basic-chatbot-example-with-langchain-and-openai)
-19. [Inspiration and References](#inspiration-and-references)
-20. [TODO List](#todo-list)
-21. [License](#license)
+2. [Database Setup Options](#database-setup-options)
+   - [Option A: Using Supabase (Recommended)](#option-a-using-supabase-recommended)
+   - [Option B: Using Local PostgreSQL](#option-b-using-local-postgresql)
+3. [Run the project using Docker containers and forcing build containers](#run-the-project-using-docker-containers-and-forcing-build-containers)
+4. [Run project using Docker containers](#run-project-using-docker-containers)
+5. [Setup database with initial data](#setup-database-with-initial-data)
+6. [ERD Database model](#erd-database-model)
+7. [Containers architecture](#containers-architecture)
+8. [Preview](#preview)
+9. [Static files](#static-files)
+10. [Minio server](#minio-server)
+11. [Celery](#celery)
+12. [Run Alembic migrations (Only if you change the DB model)](#run-alembic-migrations-only-if-you-change-the-db-model)
+13. [Production Deployment](#production-deployment)
+14. [Database unique IDs](#database-unique-ids)
+15. [Code Style](#code-style)
+16. [SonarQube static analysis](#sonarqube-static-analysis)
+17. [Testing](#testing)
+18. [Type checker](#type-checker)
+19. [Basic chatbot example with Langchain and OpenAI](#basic-chatbot-example-with-langchain-and-openai)
+20. [Inspiration and References](#inspiration-and-references)
+21. [TODO List](#todo-list)
+22. [License](#license)
 
 # Prerequisites
 
@@ -71,6 +79,76 @@ sudo apt-get -y install make
 You can check if it is installed with this command
 ```
 make --version
+```
+
+# Database Setup Options
+
+This template supports two database options:
+
+## Option A: Using Supabase (Recommended)
+
+[Supabase](https://supabase.com/) provides a managed PostgreSQL database with additional features like real-time subscriptions, authentication, edge functions, and a built-in dashboard.
+
+### Steps to setup Supabase:
+
+1. **Create a Supabase account**: Go to [supabase.com](https://supabase.com) and create a free account.
+
+2. **Create a new project**: 
+   - Click "New Project"
+   - Choose your organization
+   - Enter a project name and database password
+   - Select a region closest to your users
+
+3. **Get your database credentials**:
+   - Go to **Settings** → **Database**
+   - Find the "Connection Info" section
+   - Note down your connection details
+
+4. **Update your .env file**:
+```bash
+# Copy .env.example to .env
+cp .env.example .env
+
+# Update with your Supabase credentials
+DATABASE_HOST=db.<your-project-ref>.supabase.co
+DATABASE_USER=postgres
+DATABASE_PASSWORD=<your-supabase-password>
+DATABASE_NAME=postgres
+DATABASE_CELERY_NAME=postgres
+DATABASE_PORT=5432
+
+# Alternative: Use the direct connection URL
+SUPABASE_DATABASE_URL=postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres
+```
+
+5. **Run with Supabase**:
+```bash
+make run-dev-supabase
+```
+
+## Option B: Using Local PostgreSQL
+
+For local development, you can use a local PostgreSQL database running in Docker.
+
+### Steps for local setup:
+
+1. **Update your .env file**:
+```bash
+# Copy .env.example to .env
+cp .env.example .env
+
+# Use local database settings (these are the defaults)
+DATABASE_HOST=database
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=fastapi_db
+DATABASE_CELERY_NAME=celery_schedule_jobs
+DATABASE_PORT=5432
+```
+
+2. **Run with local database**:
+```bash
+make run-dev
 ```
 
 ## Python ">3.9,<3.12"
@@ -108,6 +186,18 @@ After that you can show the interpreted path. You can copy that path and set as 
 
 ## Run the project using Docker containers and forcing build containers
 
+### With Supabase (recommended for production-ready database)
+*Using docker compose command*
+```sh
+docker compose -f docker-compose-dev-supabase.yml up --build
+```
+
+*Using Makefile command*
+```sh
+make run-dev-supabase
+```
+
+### With Local PostgreSQL (for local development)
 *Using docker compose command*
 ```sh
 docker compose -f docker-compose-dev.yml up --build
@@ -120,6 +210,18 @@ make run-dev-build
 
 ## Run project using Docker containers
 
+### With Supabase
+*Using docker compose command*
+```sh
+docker compose -f docker-compose-dev-supabase.yml up
+```
+
+*Using Makefile command*
+```sh
+make run-dev-supabase
+```
+
+### With Local PostgreSQL
 *Using docker compose command*
 ```sh
 docker compose -f docker-compose-dev.yml up
@@ -131,7 +233,22 @@ make run-dev
 ```
 
 ## Setup database with initial data
-This creates sample users on database.
+
+### With Supabase
+This creates sample users in your Supabase database.
+
+*Using docker compose command*
+```
+docker compose -f docker-compose-dev-supabase.yml exec fastapi_server python app/initial_data.py
+```
+
+*Using Makefile command*
+```sh
+make init-supabase-db
+```
+
+### With Local PostgreSQL
+This creates sample users in your local database.
 
 *Using docker compose command*
 ```
@@ -143,12 +260,21 @@ docker compose -f docker-compose-dev.yml exec fastapi_server python app/initial_
 make init-db
 ```
 
+### User Credentials
 Any of the above commands creates three users with the following passwords:
 
 - **Admin credentials ->** *username:* admin@admin.com and *password:* admin 
 - **Manager credentials ->** *username:* manager@example.com and *password:* admin 
 - **User credentials ->** *username:* user@example.com and *password:* admin 
 
+### Database Access
+
+**For Supabase:**
+- Access your database through the Supabase dashboard at [app.supabase.com](https://app.supabase.com)
+- Use the built-in SQL editor and table editor
+- Monitor real-time activity and logs
+
+**For Local PostgreSQL:**
 You can connect to the Database using pgAdmin4 and use the credentials from .env file. Database port on local machine has been configured to **5454** on docker-compose-dev.yml file
 
 (Optional) If you prefer you can run pgAdmin4 on a docker container using the following commands, they should executed on different terminals:
@@ -213,6 +339,19 @@ Within the **natural_language** endpoints, you can access a sample application t
 
 ## Run Alembic migrations (Only if you change the DB model)
 
+### With Supabase
+*Using docker compose command*
+```sh
+docker compose -f docker-compose-dev-supabase.yml exec fastapi_server alembic revision --autogenerate
+docker compose -f docker-compose-dev-supabase.yml exec fastapi_server alembic upgrade head
+```
+
+*Using Makefile command*
+```sh
+make add-supabase-migration
+```
+
+### With Local PostgreSQL
 *Using docker compose command*
 ```sh
 docker compose -f docker-compose-dev.yml exec fastapi_server alembic revision --autogenerate
@@ -225,13 +364,23 @@ make add-dev-migration
 ```
 
 ## Production Deployment
-Remember to use a persistant PostgreSQL database, update the new credentials on .env file and use this command to run the project in a production environment. For testing this configuration on localhost you can uncomment the database container and 
-depends_on of fastapi container otherwise it will not work on a local environment.
+
+### With Supabase (Recommended)
+For production deployment with Supabase:
+
+1. **Set up your production Supabase project** (separate from development)
+2. **Update your production .env file** with Supabase credentials
+3. **Deploy using Docker Compose**:
 
 *Using docker compose command*
 ```sh
 docker compose up --build
 ```
+
+The production docker-compose.yml is configured to work with external databases like Supabase without local database dependencies.
+
+### With External PostgreSQL
+Remember to use a persistent PostgreSQL database, update the new credentials on .env file and use this command to run the project in a production environment.
 
 ## Database unique IDs
 Generating and using unique IDs is a really important desicion when starting a new project and its most common use is as primary keys for database tables. This project uses a custom [UUID7 Draft04 implementation](https://github.com/oittaa/uuid6-python) to make it simple to use and take advantage of UUID type of PostgreSQL. UUID7 combines timestamp with random data in order to help to convert data into time-stamped sequencially. If you are looking for another alternatives for tables IDs like [Snowflakes](https://betterprogramming.pub/uuid-generation-snowflake-identifiers-unique-2aed8b1771bc), [ULID](https://github.com/ulid/spec), [KSUID](https://github.com/segmentio/ksuid), [pushID](https://firebase.blog/posts/2015/02/the-2120-ways-to-ensure-unique_68#how-push-ids-are-generated), [xid](https://github.com/rs/xid) among others you can check [these references](https://github.com/jonra1993/fastapi-alembic-sqlmodel-async/issues/12#issuecomment-1272425109).
@@ -433,6 +582,7 @@ To begin experimenting with the basic chatbot, follow these steps:
 - [x] Add websocket conneting with chatgpt
 - [x] Setup testing configuracion
 - [x] Add sample composition using pydantic
+- [x] Add Supabase database integration and migration support
 - [ ] Add a nextjs sample frontend
 - [ ] Add testing
 - [ ] Add jsonb field on table sample
@@ -442,6 +592,8 @@ To begin experimenting with the basic chatbot, follow these steps:
 - [ ] Add instructions on doc for production deployment using github actions and dockerhub (CI/CD)
 - [ ] Add production deployment orchestation using terraform + Elastic Beanstalk - AWS
 - [ ] Convert repo into template using cookiecutter
+- [ ] Add Supabase Auth integration (optional enhancement)
+- [ ] Add Supabase real-time subscriptions example
 
 ### Support and Maintenance
 

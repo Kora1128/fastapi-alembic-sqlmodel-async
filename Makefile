@@ -28,6 +28,8 @@ help:
 	@echo "        Run development docker compose and force build containers."
 	@echo "    run-dev"
 	@echo "        Run development docker compose."
+	@echo "    run-dev-supabase"
+	@echo "        Run development docker compose with Supabase (no local database)."
 	@echo "    stop-dev"
 	@echo "        Stop development docker compose."
 	@echo "    run-prod"
@@ -36,8 +38,12 @@ help:
 	@echo "        Run production docker compose."
 	@echo "    init-db"
 	@echo "        Init database with sample data."	
+	@echo "    init-supabase-db"
+	@echo "        Init Supabase database with sample data."	
 	@echo "    add-dev-migration"
 	@echo "        Add new database migration using alembic."
+	@echo "    add-supabase-migration"
+	@echo "        Add new database migration using alembic with Supabase."
 	@echo "    upgrade-migration"
 	@echo "        This helps to upgrade pending migrations."	
 	@echo "    run-pgadmin"
@@ -72,6 +78,9 @@ run-dev-build:
 run-dev:
 	docker compose -f docker-compose-dev.yml up
 
+run-dev-supabase:
+	docker compose -f docker-compose-dev-supabase.yml up
+
 stop-dev:
 	docker compose -f docker-compose-dev.yml down
 
@@ -90,6 +99,10 @@ create-celery-db:
 init-db:
 	docker compose -f docker-compose-dev.yml exec fastapi_server python app/initial_data.py && \
 	echo "Initial data created." 
+
+init-supabase-db:
+	docker compose -f docker-compose-dev-supabase.yml exec fastapi_server python app/initial_data.py && \
+	echo "Initial data created in Supabase." 
 
 formatter:
 	cd backend/app && \
@@ -123,6 +136,11 @@ run-sonar-scanner:
 add-dev-migration:
 	docker compose -f docker-compose-dev.yml exec fastapi_server alembic revision --autogenerate && \
 	docker compose -f docker-compose-dev.yml exec fastapi_server alembic upgrade head && \
+	echo "Migration added and applied."
+
+add-supabase-migration:
+	docker compose -f docker-compose-dev-supabase.yml exec fastapi_server alembic revision --autogenerate && \
+	docker compose -f docker-compose-dev-supabase.yml exec fastapi_server alembic upgrade head && \
 	echo "Migration added and applied."
 
 upgrade-migration:	
